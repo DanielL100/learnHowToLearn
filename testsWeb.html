@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול למידה רב-קורסי</title>
+	
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>ניהול למידה למבחנים</h1>
+
+    <div class="tabs-container">
+        <div id="courseTabs" class="tabs-list"></div>
+        <button id="addCourseBtn" class="btn-add-course" title="הוסף קורס חדש">+</button>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label>שאלות (דיפולט):</label>
+            <select id="qCountSelect">
+                <option value="1">1</option><option value="2">2</option>
+                <option value="3" selected>3</option><option value="4">4</option>
+                <option value="5">5</option><option value="6">6</option>
+            </select>
+        </div>
+        <button class="btn-add" id="addRowBtn">הוסף מבחן</button>
+        <button class="btn-load" id="renameCourseBtn">✏️ שנה שם קורס</button>
+        <button class="btn-save" id="downloadBtn">שמור הכל ל-JSON</button>
+        <button class="btn-load" onclick="document.getElementById('uploadInput').click()">טען קובץ</button>
+        <input type="file" id="uploadInput" style="display:none" accept=".json">
+        <button class="btn-clear" id="clearDataBtn">נקה הכל</button>
+		<button class="btn-save" onclick="printCourseSummary()">🖨️ הדפס סיכום קורס</button>
+		
+		<button class="btn-print" onclick="document.getElementById('pdfInput').click()">
+			<i class="fas fa-file-pdf"></i> סרוק PDF לנושאים
+		</button>
+
+		<input type="file" id="pdfInput" accept=".pdf" style="display: none;" onchange="handlePDFUpload(event)">
+
+		<div id="aiLoader" style="display:none; color: #0984e3; margin-top: 10px; font-weight: bold;">
+			🤖 המוח המלאכותי מנתח את השאלות... נא להמתין...
+		</div>
+		
+		<button class="btn-info" style="background: #6c5ce7; margin-right: 10px;" onclick="StatsManager.openModal()">📊 סטטיסטיקה</button>
+        <button class="btn-info" onclick="openModal()">ℹ️ הסבר</button>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="examsTable"><thead id="examsHead"></thead><tbody id="examsBody"></tbody></table>
+    </div>
+
+    <div class="topics-section">
+        <div class="topics-header">
+            <h2>ניהול נושאים</h2>
+            <div class="centered-button-wrapper">
+                <button class="btn-add" id="addTopicBtn">הוסף נושא חדש</button>
+            </div>
+        </div>
+		<div class="table-wrapper">
+			<table id="topicsTable">
+				<thead>
+					<tr>
+						<th>שם הנושא</th>
+						<th>סה"כ שאלות</th>
+						<th>פתורות</th>
+						<th>נקראו (200)</th>
+						<th>שנותרו</th>
+						<th>צבע</th>
+						<th>פעולות</th>
+					</tr>
+				</thead>
+				<tbody id="topicsBody"></tbody>
+			</table>
+		</div>
+    </div>
+</div>
+
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #4a90e2; padding-bottom: 10px; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #2d3436;">📖 מדריך למשתמש ומערכת הניקוד</h2>
+            <span onclick="closeModal()" style="cursor:pointer; font-size: 28px; font-weight: bold; color: #999;">&times;</span>
+        </div>
+        
+        <div style="max-height: 65vh; overflow-y: auto; text-align: right; padding-left: 10px; direction: rtl;">
+            
+            <section style="margin-bottom: 20px;">
+                <h3 style="color: #4a90e2; background: #f0f7ff; padding: 5px 10px; border-radius: 5px;">🆕 ניהול קורסים</h3>
+                <p>בתפריט העליון תוכל לעבור בין טאבים של קורסים. ליצירת קורס חדש לחץ על ה-<b>+</b>. 
+                לשינוי שם הקורס הנוכחי, לחץ על כפתור <b>"שנה שם הקורס"</b> המופיע ליד רשימת הטאבים.</p>
+            </section>
+
+            <section style="margin-bottom: 20px;">
+                <h3 style="color: #4a90e2; background: #f0f7ff; padding: 5px 10px; border-radius: 5px;">🏷️ הגדרת נושאים</h3>
+                <p>לפני מילוי מבחן, הגדר נושאים בטבלה התחתונה. לכל נושא צבע ייחודי שיצבע את השאלות בטבלה הראשית בהתאם לבחירה שלך.</p>
+            </section>
+
+            <section style="margin-bottom: 25px;">
+                <h3 style="color: #4a90e2; background: #f0f7ff; padding: 5px 10px; border-radius: 5px;">📊 שיטת הניקוד והסטטוסים</h3>
+                <p>הזן ערכים במשבצות השאלות כדי לעדכן סטטוס וצבע:</p>
+                <div style="display: flex; gap: 10px; justify-content: space-between; flex-wrap: nowrap;">
+                    <div style="flex: 1; background: #55efc4; padding: 10px; border-radius: 8px; border: 1px solid #00b894; text-align: center; font-size: 0.9em;">
+                        <b>ציון (1-100)</b><br>שאלה שנפתרה
+                    </div>
+                    <div style="flex: 1; background: #a29bfe; padding: 10px; border-radius: 8px; border: 1px solid #6c5ce7; text-align: center; font-size: 0.9em;">
+                        <b>הערך 200</b><br>נקראה והובנה
+                    </div>
+                    <div style="flex: 1; background: #ff7675; padding: 10px; border-radius: 8px; border: 1px solid #d63031; text-align: center; font-size: 0.9em;">
+                        <b>הערך 1-</b><br>ירד מהחומר
+                    </div>
+                    <div style="flex: 1; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; text-align: center; font-size: 0.9em;">
+                        <b>הערך 0</b><br>טרם טופל
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-bottom: 20px;">
+                <h3 style="color: #4a90e2; background: #f0f7ff; padding: 5px 10px; border-radius: 5px;">🖨️ הדפסה וסיכום</h3>
+                <p>כפתור <b>"הדפס סיכום קורס"</b> מייצר דף לרוחב המרכז את כל ההתקדמות, כולל סטטיסטיקת נושאים והערות "סעיפים לחזרה" עם ירידות שורה.</p>
+            </section>
+
+            <section style="background: #fff9db; padding: 15px; border-radius: 10px; border-right: 5px solid #f39c12;">
+                <h4 style="margin: 0 0 5px 0;">💾 גיבוי נתונים:</h4>
+                <p style="margin: 0;">הנתונים נשמרים על הדפדפן. עם זאת, רצוי לשמור אותם באמצעות הכפתור <b>"שמור הכל ל-JSON"</b>. במקרה של ניסיון לצאת מבלי לשמור תופיע אזהרה. לטעינה השתמש ב-<b>"טען קובץ"</b>.</p>
+            </section>
+        </div>
+
+        <div style="margin-top: 25px; text-align: center;">
+            <button onclick="closeModal()" class="btn-save" style="padding: 10px 40px;">סגור והמשך</button>
+        </div>
+    </div>
+</div>
+
+<div id="statsModal" class="modal">
+    <div class="modal-content" style="max-width: 1000px; width: 95%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6c5ce7; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                📊 ניתוח למידה והתקדמות
+            </h2>
+            <span onclick="StatsManager.closeModal()" style="cursor:pointer; font-size: 32px; font-weight: bold; color: #636e72;">&times;</span>
+        </div>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 30px;">
+            <div style="flex: 2; min-width: 300px; height: 350px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+                <h4 style="margin-top: 0; text-align: center; color: #2d3436;">📈 מגמת ציונים במבחנים</h4>
+                <canvas id="scoresChart"></canvas>
+            </div>
+            
+            <div style="flex: 1; min-width: 250px; height: 350px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #eee; overflow: hidden;">
+                <h4 style="margin-top: 0; text-align: center; color: #2d3436;">🍰 התפלגות שאלות</h4>
+                <canvas id="topicsPieChart"></canvas>
+            </div>
+        </div>
+
+        <div id="statsSummary" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script type="module">
+	import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.14.0';
+	window.AI = { pipeline, env }; // הפיכה לגלובלי לשימוש בקבצים אחרים
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="classifier.js"></script>
+<script src="script.js"></script>
+<script src="stats.js"></script>
+</body>
+</html>

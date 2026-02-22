@@ -299,3 +299,111 @@ canvas {
         width: 100% !important;
         height: 100% !important;
     }
+	
+	
+/* ======================================================
+   בלוק תיקונים סופי - מותאם למצב אופקי ותיבות מורחבות
+   ====================================================== */
+
+/* 1. יישור פאנל הבקרה והרחבת תיבת בחירת השאלות */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+/* הרחבת תיבת הבחירה של מספר השאלות הדיפולטיביות */
+#qCountSelect {
+    min-width: 160px; /* הרחבה משמעותית */
+    height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 2. תיקון כפתור הסטטיסטיקה */
+.btn-info {
+    margin-right: 0 !important;
+}
+
+/* 3. הבטחת גלילה לטבלת הנושאים */
+.topics-section .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+    -webkit-overflow-scrolling: touch;
+}
+
+#topicsTable {
+    min-width: 750px !important; /* הגדלה קלה להבטחת מרחב */
+    width: 100%;
+}
+
+/* 4. התאמות ספציפיות למסכי טלפון (Mobile) */
+@media (max-width: 768px) {
+    
+    .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .btn-info {
+        grid-column: span 2;
+        order: 10;
+    }
+
+    /* תיקון סמסטר ומועד - הרחבה נוספת למניעת היחתכות */
+    #examsTable td:nth-child(3), 
+    #examsTable td:nth-child(4) {
+        min-width: 85px !important; /* הגדלה מ-70 ל-85 */
+    }
+
+    #examsTable input[type="text"] {
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 6px;
+        box-sizing: border-box;
+    }
+
+    #examsTable input[type="number"] {
+        min-width: 55px;
+        font-size: 16px !important;
+    }
+
+    .container {
+        padding: 10px;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    .modal-content {
+        width: 96%;
+        padding: 15px;
+        max-height: 90vh;
+    }
+
+    .stats-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+}
+
+/* 5. תיקון קריטי למצב אופקי (Landscape) בטלפון */
+@media (max-height: 500px) and (orientation: landscape) {
+    .controls {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* סידור חכם יותר */
+    }
+    
+    .btn-info {
+        grid-column: auto;
+    }
+
+    /* במצב אופקי יש יותר רוחב - ננצל אותו לסמסטר ומועד */
+    #examsTable td:nth-child(3), 
+    #examsTable td:nth-child(4) {
+        min-width: 100px !important; /* הרחבה משמעותית במצב אופקי */
+    }
+}
