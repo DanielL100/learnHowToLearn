@@ -1,0 +1,301 @@
+:root {
+    --bg-page: #f4f7f6;
+    --bg-container: #fdfdfd;
+    --bg-controls: #e9ecef;
+    --text-main: #2d3436;
+    --border-color: #dee2e6;
+    --accent-green: #51af5e;
+    --accent-blue: #4a90e2;
+    --accent-red: #e35d5d;
+    --input-focus: #4a90e2;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0; padding: 15px; background-color: var(--bg-page); color: var(--text-main); direction: rtl;
+}
+
+.container {
+    width: 98vw; margin: 0 auto; background: var(--bg-container); padding: 25px;
+    border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); box-sizing: border-box;
+}
+
+h1 { text-align: center; color: #444; margin-bottom: 25px; }
+
+/* טאבים - ללא גלילה אנכית */
+.tabs-container {
+    display: flex; align-items: flex-end; margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color); padding-bottom: 0; gap: 5px;
+    overflow-y: hidden; overflow-x: auto;
+}
+
+.tabs-list { display: flex; gap: 8px; align-items: flex-end; }
+
+.course-tab {
+    background: #e9ecef; padding: 10px 20px; border-radius: 12px 12px 0 0;
+    cursor: pointer; display: flex; align-items: center; gap: 10px;
+    font-weight: 600; transition: all 0.2s; border: 1px solid var(--border-color);
+    border-bottom: none; white-space: nowrap; color: #666;
+}
+
+.course-tab.active {
+    background: var(--bg-container); border-color: var(--border-color);
+    border-bottom: 2px solid var(--bg-container); color: var(--accent-blue);
+    margin-bottom: -2px; z-index: 2;
+}
+
+.tab-close {
+    font-size: 18px; color: #999; border-radius: 50%; width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+}
+.tab-close:hover { background: var(--accent-red); color: white; }
+
+.btn-add-course {
+    background: var(--accent-green); color: white; border: none; border-radius: 50%;
+    width: 32px; height: 32px; font-size: 20px; cursor: pointer; margin-right: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* פאנל שליטה */
+.controls {
+    display: flex; gap: 12px; align-items: center; margin-bottom: 25px;
+    background: var(--bg-controls); padding: 15px; border-radius: 12px; flex-wrap: wrap;
+}
+
+/* עיצוב מודרני ל-Inputs */
+input[type="number"], input[type="text"], input[type="date"], select, textarea {
+    border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px;
+    font-size: 14px; background-color: #ffffff; outline: none; transition: all 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--input-focus); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+/* טבלאות */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;   /* מאפשר גלילה אופקית רק לטבלה */
+    overflow-y: visible; /* מאפשר לטבלה לגבוה כמה שצריך ללא גלילה אנכית פנימית */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 30px;
+    display: block; /* מבטיח שהדיב יתנהג כאלמנט חוסם */
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 1200px; /* מבטיח שהטבלה לא תתכווץ מדי ותהפוך לבלתי קריאה */
+}
+/* --- טבלה ראשית צפופה ויעילה --- */
+td { 
+    border: 1px solid #f1f3f5; 
+    padding: 6px; 
+    font-size: 15px; /* הגדלה מ-13px */
+    white-space: nowrap; 
+	vertical-align: top; /* מצמיד את הטקסט למעלה */
+    overflow: visible !important; /* מבטיח שמה שמרחיבים לא ייחתך */
+	height: auto;
+	text-align: center;
+}
+
+th { 
+    position: sticky; top: 0; background: #f8f9fa; z-index: 10; 
+    border-bottom: 2px solid var(--border-color); 
+    padding: 8px; 
+    font-size: 14px; /* הגדלה מ-12px */
+}
+
+/* עיצוב תיבות הטקסט בתוך הטבלה */
+table textarea {
+    display: block;
+    width: 100%;        /* מתחיל ברוחב התא */
+    min-width: 150px;   /* רוחב מינימלי */
+    max-width: 100%;
+    min-height: 45px;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 16px;
+	line-height: 1.4;
+    resize: vertical;       /* מאפשר מתיחה, אך כעת היא מוגבלת ע"י max-width */
+    background-color: #ffffff;
+}
+
+/* הדגשה בזמן כתיבה */
+table textarea:focus {
+    border-color: #3498db;
+    background-color: #f7fbff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(52, 152, 219, 0.3);
+}
+
+/* --- תיקון ה-Selectbox בתוך הטבלה --- */
+#examsTable select {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: auto; /* שינוי מ-100% כדי שלא ימתח את התא */
+    min-width: 60px; /* רוחב מינימלי קטן מאוד */
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0;
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* הגדרת רוחב ספציפי לעמודות צרות */
+#examsTable input[type="number"] {
+    padding: 4px;
+    font-size: 12px;
+	text-align: center;
+}
+
+/* מניעת גלילה מיותרת - העמודות יתכווצו למינימום הנדרש */
+#examsTable td {
+    min-width: 40px; 
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* שומר על הכל בשורה אחת */
+}
+
+#examsHead th {
+	white-space: nowrap;
+}
+
+.empty-cell {
+    text-align: center;
+    color: #b2bec3; /* צבע אפור עדין לסימן המינוס */
+    vertical-align: middle;
+}
+
+/* עמודות הנושאים יקבלו קצת יותר מקום אבל לא בהגזמה */
+#examsTable td:nth-last-child(-n+20) {
+    min-width: 80px;
+}
+
+#examsTable td:has(input[type="checkbox"]), 
+#examsTable input[type="checkbox"] {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+    display: table-cell; /* מבטיח שהמרכוז יחול על המיכל */
+}
+
+/* במידה והדפדפן לא תומך ב-has, נטרגט את התא לפי מיקום (עמודה לפני הנושאים) */
+#examsTable td input[type="checkbox"] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* כפתור מחיקה קומפקטי יותר */
+.btn-row-delete {
+    padding: 2px 6px;
+    font-size: 11px;
+}
+
+/* ניהול נושאים ומרכוז */
+.topics-section {
+    display: flex; flex-direction: column; align-items: center; 
+    margin-top: 30px; padding: 20px; background: #fcfcfc; border-radius: 15px; border: 1px solid #eee;
+}
+.topics-header { width: 100%; text-align: center; margin-bottom: 10px; }
+.centered-button-wrapper { display: flex; justify-content: center; margin-bottom: 20px; }
+
+#topicsTable { width: auto; min-width: 850px; font-size: 18px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+#topicsTable th { background-color: #f1f3f5; padding: 15px; text-align: center;
+    vertical-align: middle; }
+#topicsTable td { padding: 12px; background: white; font-size: 17px; text-align: center;
+    vertical-align: middle;}
+
+/* כפתורים */
+button { border-radius: 8px; transition: all 0.2s; border: none; font-weight: 600; padding: 10px 18px; cursor: pointer; }
+button:hover { filter: brightness(0.95); transform: translateY(-1px); }
+.btn-add { background: var(--accent-green); color: white; }
+.btn-save { background: var(--accent-blue); color: white; }
+.btn-load { background: #6c757d; color: white; }
+.btn-clear { background: var(--accent-red); color: white; }
+.btn-info { background: #f39c12; color: white; margin-right: auto; }
+
+.btn-row-delete { background: var(--accent-red); color: white; padding: 6px 10px; font-size: 12px; }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    overflow: hidden; /* מונע כפל גלילה */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 850px;
+    max-height: 85vh;
+    overflow-y: auto;
+    
+    /* מירכוז אבסולוטי מושלם */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    direction: rtl;
+}
+.close { position: absolute; left: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
+
+#canvas-container { width: 100%; height: 250px; margin-bottom: 30px; }
+.review-textarea, .notes-textarea { width: 110px; height: 35px; resize: both; font-size: 12px; }
+
+/* עיצוב המודאל של הסטטיסטיקה (דומה להסבר) */
+#statsModal .modal-content {
+    max-width: 950px;
+    width: 90%;
+}
+
+#canvas-container-modal {
+    width: 100%;
+    height: 400px; /* גרף גדול יותר בתוך הפופאפ */
+    margin-top: 20px;
+}
+
+canvas {
+    display: block;
+    max-width: 100%;
+    image-rendering: -webkit-optimize-contrast; /* משפר חדות בדפדפנים מסוימים */
+}
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.stat-label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+.stat-value { font-size: 1.6em; font-weight: bold; }
+
+#scoresChart, #topicsPieChart {
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+        width: 100% !important;
+        height: 100% !important;
+    }
