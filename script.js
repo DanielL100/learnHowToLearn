@@ -10,7 +10,8 @@ const defaultColors = ["#74b9ff", "#C4E538", "#a29bfe", "#fd79a8", "#fa983a", "#
 function saveToLocalStorage() {
     localStorage.setItem('exam_tracker_data', JSON.stringify({
         courses: courses,
-        activeCourseIndex: activeCourseIndex
+        activeCourseIndex: activeCourseIndex,
+		defaultQCount: document.getElementById('qCountSelect').value
     }));
 }
 
@@ -21,6 +22,11 @@ function loadFromLocalStorage() {
             const parsed = JSON.parse(savedData);
             courses = parsed.courses || [];
             activeCourseIndex = parsed.activeCourseIndex || 0;
+            
+            // עדכון ה-select אם קיים ערך שמור
+            if (parsed.defaultQCount) {
+                document.getElementById('qCountSelect').value = parsed.defaultQCount;
+            }
             return true;
         } catch (e) {
             console.error("שגיאה בטעינת נתונים מהדפדפן", e);
@@ -47,7 +53,11 @@ function init() {
     document.getElementById('renameCourseBtn').onclick = () => renameCourse(activeCourseIndex);
     document.getElementById('downloadBtn').onclick = saveFileWithPicker;
     document.getElementById('uploadInput').onchange = loadJSON;
-    document.getElementById('qCountSelect').onchange = () => renderAll();
+	document.getElementById('qCountSelect').onchange = () => {
+		saveToLocalStorage();
+		markDirty();
+		renderAll();
+	}
     
     document.getElementById('clearDataBtn').onclick = () => { 
         if(confirm("זה ימחק הכל מהדפדפן. האם להמשיך?")) { 
@@ -310,7 +320,7 @@ function renderTopicsTable() {
     cur().topics.forEach((t, i) => {
         const remaining = stats[t.id].total - stats[t.id].solved - stats[t.id].read;
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input type="text" value="${escapeHTML(t.name)}" onchange="markDirty(); cur().topics[${i}].name=this.value; renderAll();"></td>
+        tr.innerHTML = `<td><input type="text" value="${escapeHTML(t.name)}" onchange="markDirty(); cur().topics[${i}].name=this.value; saveToLocalStorage(); renderAll();"></td>
             <td>${stats[t.id].total}</td><td>${stats[t.id].solved}</td><td>${stats[t.id].read}</td>
             <td style="color:${remaining > 0 ? '#dc3545' : '#28a745'}">${remaining}</td>
             <td><input type="color" value="${t.color}" onchange="markDirty(); cur().topics[${i}].color=this.value; renderAll();"></td>

@@ -44,7 +44,7 @@
 			🤖 המוח המלאכותי מנתח את השאלות... נא להמתין...
 		</div>
 		
-		<button class="btn-info" style="background: #6c5ce7; margin-right: 10px;" onclick="StatsManager.openModal()">📊 סטטיסטיקה</button>
+		<button class="btn-print" id="statBtn" onclick="StatsManager.openModal()">📊 סטטיסטיקה</button>
         <button class="btn-info" onclick="openModal()">ℹ️ הסבר</button>
     </div>
 
@@ -59,7 +59,6 @@
                 <button class="btn-add" id="addTopicBtn">הוסף נושא חדש</button>
             </div>
         </div>
-		<div class="table-wrapper">
 			<table id="topicsTable">
 				<thead>
 					<tr>
@@ -74,7 +73,6 @@
 				</thead>
 				<tbody id="topicsBody"></tbody>
 			</table>
-		</div>
     </div>
 </div>
 
